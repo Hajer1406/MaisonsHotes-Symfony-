@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modifier la Réservation #{{ reservation.id }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+.page-wrapper { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8f7f4; min-height: calc(100vh - 200px); padding: 2.5rem 2rem 4rem; }
+.page-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+.page-icon { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(245,87,108,.3); flex-shrink: 0; }
+.page-icon svg { width: 26px; height: 26px; fill: #fff; }
+.page-title { font-size: 1.7rem; font-weight: 700; color: #1a1a2e; letter-spacing: -.03em; }
+.page-subtitle { font-size: .85rem; color: #888; margin-top: 2px; }
+.res-id-badge { display: inline-flex; align-items: center; gap: .35rem; background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; border-radius: 8px; padding: .25rem .7rem; font-size: .8rem; font-weight: 600; margin-left: .5rem; vertical-align: middle; }
+.form-card { background: #fff; border: 1px solid #ebebeb; border-radius: 18px; padding: 2rem 2.25rem; max-width: 780px; }
+.btn-back { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem 1rem; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: .85rem; font-weight: 500; color: #555; text-decoration: none; transition: all .15s; font-family: inherit; }
+.btn-back:hover { background: #f8f7f4; color: #1a1a2e; text-decoration: none; }
+.btn-back svg { width: 15px; height: 15px; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+  <div class="page-header">
+    <div class="page-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+    </div>
+    <div>
+      <div class="page-title">
+        Modifier la réservation
+        <span class="res-id-badge"># {{ reservation.id }}</span>
+      </div>
+      <div class="page-subtitle">{{ reservation.client.name }} {{ reservation.client.surname }} — {{ reservation.maison.title }}</div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    {{ include('reservation/_form.html.twig') }}
+  </div>
+
+  <div style="margin-top: 1rem; display: flex; align-items: center; gap: .75rem;">
+    <a href="{{ path('app_reservation_index') }}" class="btn-back">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      Retour à la liste
+    </a>
+    {{ include('reservation/_delete_form.html.twig') }}
+  </div>
+</div>
+{% endblock %}

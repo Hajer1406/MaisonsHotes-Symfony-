@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ maison.title }} | {{ parent() }}{% endblock %}
+
+{% block body %}
+<!-- Back Button -->
+<div class="mb-4">
+    <a href="{{ path('app_maison_index') }}" style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
+        <i class="fas fa-arrow-left"></i>Retour aux maisons
+    </a>
+</div>
+
+<div class="row g-4">
+    <!-- Image Section -->
+    <div class="col-lg-7">
+        <div class="card-modern overflow-hidden animate-fade-in" style="border-radius: 20px;">
+            <div style="height: 450px; background-size: cover; background-position: center; 
+                        background-image: url('{% if maison.image %}/uploads/images/{{ maison.image }}{% else %}https://images.unsplash.com/photo-1564013795519-2076f76d35cd?w=800{% endif %}');">
+                <!-- Price Badge Overlay -->
+                <div style="position: absolute; top: 20px; right: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; border-radius: 50px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                    {{ maison.price }} <small style="font-weight: 400; font-size: 0.8rem;">TND/nuit</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Section -->
+    <div class="col-lg-5">
+        <div class="card-modern p-4 h-100 animate-slide-up" style="border-radius: 20px;">
+            <!-- Header -->
+            <div class="mb-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(52, 211, 153, 0.15)); color: #059669; padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600;">
+                        <i class="fas fa-check-circle me-1"></i>Disponible
+                    </span>
+                    <span style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); color: #667eea; padding: 6px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600;">
+                        <i class="fas fa-home me-1"></i>Maison
+                    </span>
+                </div>
+                <h1 class="fw-bold mb-2" style="font-size: 1.75rem; color: #1a1a2e;">{{ maison.title }}</h1>
+                <p class="mb-0" style="color: #64748b; font-size: 1rem;">
+                    <i class="fas fa-map-marker-alt" style="color: #f43f5e;"></i>
+                    {{ maison.city }}, Tunisie
+                </p>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-4">
+                <h5 class="fw-bold mb-3" style="color: #334155; font-size: 0.95rem;">
+                    <i class="fas fa-align-left me-2" style="color: #667eea;"></i>Description
+                </h5>
+                <div style="color: #64748b; line-height: 1.7; background: #f8fafc; padding: 1rem; border-radius: 12px; border-left: 3px solid #667eea;">
+                    {{ maison.description|raw }}
+                </div>
+            </div>
+
+            <!-- Propriétaire -->
+            {% if maison.proprietaires %}
+            <div class="mb-4" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); padding: 1.25rem; border-radius: 16px;">
+                <h5 class="fw-bold mb-3" style="color: #334155; font-size: 0.9rem;">
+                    <i class="fas fa-user-tie me-2" style="color: #667eea;"></i>Propriétaire
+                </h5>
+                <div class="d-flex align-items-center">
+                    <div style="width: 55px; height: 55px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.25rem; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                        {{ maison.proprietaires.name|first|upper }}
+                    </div>
+                    <div class="ms-3">
+                        <div style="font-weight: 700; color: #1a1a2e; font-size: 1.1rem;">{{ maison.proprietaires.name }} {{ maison.proprietaires.surname }}</div>
+                        <div style="color: #64748b; font-size: 0.9rem;">
+                            <i class="fas fa-phone-alt me-1" style="color: #10b981;"></i>
+                            <a href="tel:{{ maison.proprietaires.phone }}" style="color: #64748b; text-decoration: none;">{{ maison.proprietaires.phone }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Actions -->
+            <div class="d-flex gap-2 mt-auto pt-3" style="border-top: 1px solid #e2e8f0;">
+                <a href="{{ path('app_maison_edit', {'id': maison.id}) }}" class="btn btn-modern btn-primary-modern flex-grow-1" style="padding: 12px 24px;">
+                    <i class="fas fa-edit me-2"></i>Modifier
+                </a>
+                {{ include('maison/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mt-4 g-4">
+    <div class="col-md-4">
+        <div class="stat-card animate-fade-in" style="animation-delay: 0.2s;">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon primary me-3">
+                    <i class="fas fa-hashtag"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{{ maison.id }}</div>
+                    <div class="stat-label">ID Maison</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card animate-fade-in" style="animation-delay: 0.3s;">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon success me-3">
+                    <i class="fas fa-city"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{{ maison.city }}</div>
+                    <div class="stat-label">Ville</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card animate-fade-in" style="animation-delay: 0.4s;">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon info me-3">
+                    <i class="fas fa-image"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{% if maison.image %}1{% else %}0{% endif %}</div>
+                    <div class="stat-label">Image</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

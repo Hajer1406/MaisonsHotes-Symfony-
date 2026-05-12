@@ -1,0 +1,158 @@
+{% extends 'base.html.twig' %}
+{% block title %}Réservation #{{ reservation.id }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+.page-wrapper { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8f7f4; min-height: calc(100vh - 200px); padding: 2.5rem 2rem 4rem; }
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+.page-header-left { display: flex; align-items: center; gap: 1rem; }
+.page-icon { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(245,87,108,.3); flex-shrink: 0; }
+.page-icon svg { width: 26px; height: 26px; fill: #fff; }
+.page-title { font-size: 1.7rem; font-weight: 700; color: #1a1a2e; letter-spacing: -.03em; }
+.page-subtitle { font-size: .85rem; color: #888; margin-top: 2px; }
+
+/* Detail card */
+.detail-card { background: #fff; border: 1px solid #ebebeb; border-radius: 18px; overflow: hidden; max-width: 640px; }
+.detail-header { padding: 1.5rem 1.75rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+.detail-header-title { font-size: 1rem; font-weight: 700; color: #1a1a2e; }
+.badge { display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .9rem; border-radius: 20px; font-size: .82rem; font-weight: 600; }
+.badge-paid { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.badge-unpaid { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+.badge svg { width: 12px; height: 12px; }
+
+.detail-body { padding: 0; }
+.detail-row { display: flex; align-items: center; padding: 1rem 1.75rem; border-bottom: 1px solid #f8f8f8; }
+.detail-row:last-child { border-bottom: none; }
+.detail-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 1rem; }
+.detail-icon svg { width: 17px; height: 17px; }
+.icon-purple { background: #f5f3ff; color: #7c3aed; }
+.icon-pink { background: #fdf4ff; color: #c026d3; }
+.icon-orange { background: #fff7ed; color: #c2410c; }
+.icon-green { background: #f0fdf4; color: #16a34a; }
+.icon-blue { background: #eff6ff; color: #2563eb; }
+.detail-label { font-size: .75rem; color: #aaa; text-transform: uppercase; letter-spacing: .07em; margin-bottom: .15rem; font-weight: 600; }
+.detail-value { font-size: .95rem; font-weight: 600; color: #1a1a2e; }
+.detail-value.muted { color: #999; font-style: italic; font-weight: 400; }
+
+/* Duration pill */
+.duration-pill { display: inline-flex; align-items: center; gap: .35rem; background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd; border-radius: 8px; padding: .25rem .7rem; font-size: .8rem; font-weight: 600; margin-top: .3rem; }
+
+.actions-row { display: flex; align-items: center; gap: .75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.btn-back { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.1rem; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: .85rem; font-weight: 500; color: #555; text-decoration: none; transition: all .15s; }
+.btn-back:hover { background: #f8f7f4; color: #1a1a2e; text-decoration: none; }
+.btn-back svg { width: 15px; height: 15px; }
+.btn-edit { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.1rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: #fff; border: none; border-radius: 10px; font-size: .85rem; font-weight: 600; text-decoration: none; transition: opacity .2s; box-shadow: 0 3px 10px rgba(245,87,108,.25); }
+.btn-edit:hover { opacity: .9; color: #fff; text-decoration: none; }
+.btn-edit svg { width: 15px; height: 15px; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-icon">
+        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+      </div>
+      <div>
+        <div class="page-title">Réservation <span style="color:#f5576c">#{{ reservation.id }}</span></div>
+        <div class="page-subtitle">Détails complets du séjour</div>
+      </div>
+    </div>
+    {% if reservation.paye %}
+      <span class="badge badge-paid">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        Payée
+      </span>
+    {% else %}
+      <span class="badge badge-unpaid">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01"/></svg>
+        En attente de paiement
+      </span>
+    {% endif %}
+  </div>
+
+  <div class="detail-card">
+    <div class="detail-header">
+      <span class="detail-header-title">Informations du séjour</span>
+      <span style="font-size:.8rem;color:#bbb;font-weight:500">ID : {{ reservation.id }}</span>
+    </div>
+    <div class="detail-body">
+
+      <div class="detail-row">
+        <div class="detail-icon icon-purple">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        </div>
+        <div>
+          <div class="detail-label">Client</div>
+          <div class="detail-value">{{ reservation.client.name }} {{ reservation.client.surname }}</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-icon icon-blue">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+        <div>
+          <div class="detail-label">Maison</div>
+          <div class="detail-value">{{ reservation.maison.title }}</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-icon icon-orange">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </div>
+        <div>
+          <div class="detail-label">Date de début</div>
+          <div class="detail-value">{{ reservation.dateDebut ? reservation.dateDebut|date('d/m/Y') : '—' }}</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-icon icon-pink">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </div>
+        <div>
+          <div class="detail-label">Date de fin</div>
+          <div class="detail-value">{{ reservation.dateFin ? reservation.dateFin|date('d/m/Y') : '—' }}</div>
+          {% if reservation.dateDebut and reservation.dateFin %}
+            {% set days = (reservation.dateFin.timestamp - reservation.dateDebut.timestamp) / 86400 %}
+            <span class="duration-pill">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:12px;height:12px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              {{ days|round }} nuit(s)
+            </span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-icon icon-green">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        </div>
+        <div>
+          <div class="detail-label">Paiement</div>
+          <div class="detail-value">{{ reservation.paye ? 'Payée ✓' : 'Non payée' }}</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="actions-row">
+    <a href="{{ path('app_reservation_index') }}" class="btn-back">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      Retour
+    </a>
+    <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn-edit">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+      Modifier
+    </a>
+    {{ include('reservation/_delete_form.html.twig') }}
+  </div>
+
+</div>
+{% endblock %}

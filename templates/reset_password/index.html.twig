@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié | {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="auth-container">
+    <div class="auth-card animate-scale-in">
+        <!-- Header -->
+        <div class="auth-header" style="background: var(--gradient-sunset);">
+            <div class="mb-3">
+                <span style="font-size: 3rem;">🔑</span>
+            </div>
+            <h1>Mot de passe oublié</h1>
+            <p>Récupérez l'accès à votre compte</p>
+        </div>
+
+        <!-- Body -->
+        <div class="auth-body">
+            {% for message in app.flashes('notice') %}
+                <div class="alert alert-modern alert-info animate-fade-in">
+                    <i class="fas fa-info-circle"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <form method="post" class="form-modern">
+                <div class="text-center mb-4">
+                    <i class="fas fa-envelope-open-text text-gradient" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-3">Entrez votre adresse email pour recevoir un lien de réinitialisation.</p>
+                </div>
+
+                <div class="mb-4">
+                    <label for="inputEmail" class="form-label">
+                        <i class="fas fa-envelope me-1"></i>Adresse Email
+                    </label>
+                    <input type="email" name="email" id="inputEmail" 
+                           class="form-control" 
+                           placeholder="votre@email.com" 
+                           required autofocus>
+                </div>
+
+                <div class="d-grid mb-4">
+                    <button class="btn btn-modern btn-gradient-sunset btn-lg" type="submit">
+                        <i class="fas fa-paper-plane"></i>
+                        Envoyer le lien
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <a href="{{ path('login') }}" class="text-decoration-none text-muted">
+                        <i class="fas fa-arrow-left me-1"></i>Retour à la connexion
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

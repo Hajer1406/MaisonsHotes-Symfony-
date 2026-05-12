@@ -1,0 +1,302 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservations — Maisons d'hôtes{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  .page-wrapper {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: calc(100vh - 200px);
+    background: #f8f7f4;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .page-header-left { display: flex; align-items: center; gap: 1rem; }
+  .page-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(245,87,108,.3);
+  }
+  .page-icon svg { width: 26px; height: 26px; fill: #fff; }
+  .page-title { font-size: 1.9rem; font-weight: 700; color: #1a1a2e; letter-spacing: -.03em; }
+  .page-subtitle { font-size: .85rem; color: #888; margin-top: 2px; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card { background: #fff; border: 1px solid #ebebeb; border-radius: 14px; padding: 1.1rem 1.3rem; }
+  .stat-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: .35rem; }
+  .stat-value { font-size: 2rem; font-weight: 700; color: #1a1a2e; line-height: 1; }
+  .stat-value.paid { color: #16a34a; }
+  .stat-value.pending { color: #dc2626; }
+  .stat-value.accent { color: #f5576c; }
+
+  .toolbar { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .search-box { position: relative; flex: 1; min-width: 200px; max-width: 300px; }
+  .search-box svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #bbb; }
+  .search-box input {
+    width: 100%; padding: .55rem .9rem .55rem 2.2rem;
+    border: 1.5px solid #e8e8e8; border-radius: 10px;
+    font-size: .875rem; font-family: inherit; background: #fff; color: #1a1a2e; outline: none; transition: border-color .2s;
+  }
+  .search-box input:focus { border-color: #f5576c; }
+  .search-box input::placeholder { color: #bbb; }
+
+  .filter-select {
+    padding: .55rem .9rem; border: 1.5px solid #e8e8e8; border-radius: 10px;
+    font-size: .875rem; font-family: inherit; background: #fff; color: #555; outline: none; cursor: pointer;
+  }
+  .filter-select:focus { border-color: #f5576c; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .58rem 1.25rem;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: #fff; border: none; border-radius: 10px; font-size: .875rem; font-weight: 600;
+    font-family: inherit; cursor: pointer; text-decoration: none; transition: opacity .2s, transform .15s;
+    box-shadow: 0 3px 10px rgba(245,87,108,.3);
+  }
+  .btn-primary:hover { opacity: .9; transform: translateY(-1px); color: #fff; text-decoration: none; }
+  .btn-primary svg { width: 16px; height: 16px; }
+
+  .table-card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table thead th {
+    background: #fafafa; padding: .85rem 1.25rem; text-align: left;
+    font-size: .72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .08em; color: #999; border-bottom: 1px solid #f0f0f0;
+  }
+  .data-table tbody tr { border-bottom: 1px solid #f5f5f5; transition: background .12s; }
+  .data-table tbody tr:last-child { border-bottom: none; }
+  .data-table tbody tr:hover { background: #fafafa; }
+  .data-table td { padding: .95rem 1.25rem; font-size: .9rem; color: #333; vertical-align: middle; }
+
+  .date-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa;
+    padding: .3rem .75rem; border-radius: 8px; font-size: .82rem; font-weight: 600;
+  }
+  .date-badge svg { width: 13px; height: 13px; }
+
+  .maison-cell { display: flex; align-items: center; gap: .6rem; }
+  .maison-dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, #f093fb, #f5576c); flex-shrink: 0; }
+
+  .client-cell { display: flex; align-items: center; gap: .65rem; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 700; color: #be185d; flex-shrink: 0;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .3rem .8rem; border-radius: 20px; font-size: .8rem; font-weight: 600;
+  }
+  .badge-paid { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+  .badge-unpaid { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+  .badge svg { width: 11px; height: 11px; }
+
+  .actions-cell { display: flex; gap: .5rem; }
+  .btn-action {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .38rem .8rem; border-radius: 8px; font-size: .8rem; font-weight: 600;
+    text-decoration: none; border: 1.5px solid transparent; transition: all .15s;
+    font-family: inherit; cursor: pointer;
+  }
+  .btn-action svg { width: 13px; height: 13px; }
+  .btn-show { background: #fdf4ff; color: #9333ea; border-color: #e9d5ff; }
+  .btn-show:hover { background: #f3e8ff; color: #7e22ce; text-decoration: none; }
+  .btn-edit { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+  .btn-edit:hover { background: #dcfce7; color: #15803d; text-decoration: none; }
+
+  .empty-state { text-align: center; padding: 4rem 2rem; color: #bbb; }
+  .empty-state svg { width: 56px; height: 56px; margin-bottom: 1rem; opacity: .4; }
+  .empty-state p { font-size: 1rem; font-weight: 500; }
+  .row-index { font-size: .8rem; color: #ccc; font-weight: 600; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-icon">
+        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+      </div>
+      <div>
+        <div class="page-title">Réservations</div>
+        <div class="page-subtitle">Suivi des séjours</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total</div>
+      <div class="stat-value accent">{{ reservations|length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Payées</div>
+      <div class="stat-value paid">{{ reservations|filter(r => r.paye)|length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">En attente</div>
+      <div class="stat-value pending">{{ reservations|filter(r => not r.paye)|length }}</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="resSearch" placeholder="Maison, client, date…" oninput="filterTable('resSearch','resTable')">
+    </div>
+
+    <select class="filter-select" id="payeFilter" onchange="applyFilters()">
+      <option value="">Toutes les réservations</option>
+      <option value="yes">Payées</option>
+      <option value="no">Non payées</option>
+    </select>
+
+    {% set months = {
+      1: 'Janvier', 2: 'Février', 3: 'Mars', 4: 'Avril',
+      5: 'Mai', 6: 'Juin', 7: 'Juillet', 8: 'Août',
+      9: 'Septembre', 10: 'Octobre', 11: 'Novembre', 12: 'Décembre'
+    } %}
+    {% set currentYear = "now"|date('Y') %}
+    <select class="filter-select" id="monthFilter" onchange="applyFilters()">
+      <option value="">Tous les mois ({{ currentYear }})</option>
+      {% for num, name in months %}
+        {% set count = reservations|filter(r =>
+          r.dateDebut and
+          r.dateDebut|date('Y') == currentYear and
+          r.dateDebut|date('n') == num
+        )|length %}
+        <option value="{{ num }}">{{ name }} — {{ count }} réservation{{ count > 1 ? 's' : '' }}</option>
+      {% endfor %}
+    </select>
+
+    <a href="{{ path('app_reservation_new') }}" class="btn-primary">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+      Nouvelle réservation
+    </a>
+  </div>
+
+  <div class="table-card">
+    <table class="data-table" id="resTable">
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th>Date de début</th>
+          <th>Maison</th>
+          <th>Client</th>
+          <th>Statut paiement</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for reservation in reservations %}
+        <tr
+          data-paye="{{ reservation.paye ? 'yes' : 'no' }}"
+          data-month="{{ reservation.dateDebut ? reservation.dateDebut|date('n') : '' }}"
+          data-year="{{ reservation.dateDebut ? reservation.dateDebut|date('Y') : '' }}"
+        >
+          <td class="row-index">{{ loop.index }}</td>
+          <td>
+            <span class="date-badge">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              {{ reservation.dateDebut ? reservation.dateDebut|date('d/m/Y') : '—' }}
+            </span>
+          </td>
+          <td>
+            <div class="maison-cell">
+              <div class="maison-dot"></div>
+              {{ reservation.maison.title }}
+            </div>
+          </td>
+          <td>
+            <div class="client-cell">
+              <div class="avatar">{{ reservation.client.name|first|upper }}{{ reservation.client.surname|first|upper }}</div>
+              {{ reservation.client.name ~ ' ' ~ reservation.client.surname }}
+            </div>
+          </td>
+          <td>
+            {% if reservation.paye %}
+              <span class="badge badge-paid">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                Payée
+              </span>
+            {% else %}
+              <span class="badge badge-unpaid">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01"/></svg>
+                En attente
+              </span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="actions-cell">
+              <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}" class="btn-action btn-show">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Voir
+              </a>
+              <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn-action btn-edit">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Modifier
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6">
+            <div class="empty-state">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <p>Aucune réservation enregistrée</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+const currentYear = "{{ 'now'|date('Y') }}";
+
+function filterTable(inputId, tableId) {
+  const q = document.getElementById(inputId).value.toLowerCase();
+  document.querySelectorAll('#' + tableId + ' tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function applyFilters() {
+  const paye  = document.getElementById('payeFilter').value;
+  const month = document.getElementById('monthFilter').value;
+
+  document.querySelectorAll('#resTable tbody tr[data-paye]').forEach(row => {
+    const matchPaye  = !paye  || row.dataset.paye  === paye;
+    const matchMonth = !month || (row.dataset.month === month && row.dataset.year === currentYear);
+    row.style.display = (matchPaye && matchMonth) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

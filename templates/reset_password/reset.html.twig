@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réinitialiser le mot de passe | {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="auth-container">
+    <div class="auth-card animate-scale-in">
+        <!-- Header -->
+        <div class="auth-header" style="background: var(--gradient-nature);">
+            <div class="mb-3">
+                <span style="font-size: 3rem;">🔐</span>
+            </div>
+            <h1>Nouveau mot de passe</h1>
+            <p>Créez un mot de passe sécurisé</p>
+        </div>
+
+        <!-- Body -->
+        <div class="auth-body">
+            {% for message in app.flashes('notice') %}
+                <div class="alert alert-modern alert-success animate-fade-in">
+                    <i class="fas fa-check-circle"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-modern alert-danger animate-fade-in">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {{ form_start(form, {'attr': {'class': 'form-modern'}}) }}
+                <div class="mb-4">
+                    <i class="fas fa-shield-alt text-gradient-ocean d-block text-center mb-3" style="font-size: 2.5rem;"></i>
+                    <p class="text-muted text-center small">Votre mot de passe doit contenir au moins 8 caractères.</p>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.new_password.first) }}
+                    {{ form_widget(form.new_password.first, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.new_password.first) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.new_password.second) }}
+                    {{ form_widget(form.new_password.second, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.new_password.second) }}
+                </div>
+
+                {{ form_errors(form) }}
+
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-modern btn-gradient btn-lg">Mettre à jour le mot de passe</button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{{ path('login') }}" class="text-decoration-none text-muted">
+                        <i class="fas fa-arrow-left me-1"></i>Retour à la connexion
+                    </a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

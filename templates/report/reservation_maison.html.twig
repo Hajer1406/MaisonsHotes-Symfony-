@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche Réservations{% endblock %}
+
+{% block body %}
+<h1>Rechercher les réservations par maison</h1>
+
+{{ form_start(form, {'method': 'GET'}) }}
+    {{ form_row(form.maison) }}
+    <br>
+    <button class="btn btn-primary">Rechercher</button>
+{{ form_end(form) }}
+
+<hr>
+
+<h2>Résultats</h2>
+
+<table class="table table-bordered">
+     <thead>
+         <tr>
+            <th>ID</th>
+            <th>Date début</th>
+            <th>Date fin</th>
+            <th>Maison</th>
+         </tr>
+     </thead>
+     <tbody>
+    {% for r in reservations %}
+         <tr>
+             <td>{{ r.id }}</td>
+             <td>{{ r.dateDebut ? r.dateDebut|date('Y-m-d') : '-' }}</td>
+             <td>{{ r.dateFin ? r.dateFin|date('Y-m-d') : '-' }}</td>
+             <td>{{ r.maison ? r.maison.title : '-' }}</td>
+         </tr>
+    {% else %}
+         <tr>
+            <td colspan="4" class="text-center">Aucune réservation trouvée pour votre filtre</td>
+         </tr>
+    {% endfor %}
+     </tbody>
+</table>
+{% endblock %}

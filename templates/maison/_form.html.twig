@@ -1,0 +1,347 @@
+{{ form_start(form, {'attr': {'class': 'maison-form', 'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+.maison-form { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+/* ── Section headers ── */
+.fsection { display: flex; align-items: center; gap: .6rem; margin: 0 0 1.2rem; }
+.fsection-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0; }
+.fsection-title { font-size: .92rem; font-weight: 700; color: #1a1a2e; }
+.fsection-sep { height: 1px; background: #f0f0f0; margin: 1.75rem 0 1.5rem; }
+
+/* ── Grid ── */
+.fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+.fgroup { display: flex; flex-direction: column; gap: .5rem; }
+.fgroup.full { grid-column: 1 / -1; }
+
+/* ── Label ── */
+.maison-form label {
+  font-size: .75rem !important; font-weight: 700 !important;
+  text-transform: uppercase !important; letter-spacing: .08em !important;
+  color: #777 !important; margin-bottom: 0 !important;
+}
+
+/* ── Inputs ── */
+.maison-form input[type="text"],
+.maison-form input[type="number"],
+.maison-form textarea,
+.maison-form select {
+  padding: .72rem 1rem;
+  border: 1.5px solid #e8e8e8 !important;
+  border-radius: 11px !important;
+  font-size: .92rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #1a1a2e;
+  background: #fff !important;
+  outline: none;
+  width: 100%;
+  transition: border-color .18s, box-shadow .18s;
+  box-shadow: none !important;
+}
+.maison-form input[type="text"]:focus,
+.maison-form input[type="number"]:focus,
+.maison-form textarea:focus,
+.maison-form select:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3.5px rgba(99,102,241,.12) !important;
+}
+.maison-form input::placeholder,
+.maison-form textarea::placeholder { color: #c8c8c8; }
+.maison-form textarea { resize: vertical; min-height: 120px; line-height: 1.65; }
+
+/* ── Price wrapper ── */
+.price-wrap { position: relative; }
+.price-wrap input { padding-right: 4rem !important; }
+.price-unit {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  display: flex; align-items: center; padding: 0 .9rem;
+  font-size: .78rem; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 0 10px 10px 0;
+  letter-spacing: .06em; pointer-events: none;
+}
+
+/* ── Select wrapper ── */
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '';
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  width: 0; height: 0;
+  border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid #aaa;
+  pointer-events: none;
+}
+.maison-form select { appearance: none !important; -webkit-appearance: none !important; padding-right: 2.5rem !important; cursor: pointer; }
+
+/* ── Image upload FIXED ── */
+.upload-area {
+  border: 2px dashed #d1d5db;
+  border-radius: 14px;
+  background: #fafafa;
+  transition: border-color .2s, background .2s;
+  cursor: pointer;
+  position: relative;
+}
+.upload-area:hover { border-color: #6366f1; background: #f5f3ff; }
+.upload-area.drag-over { border-color: #6366f1; background: #f5f3ff; }
+
+/* File input: absolute, full size, invisible — z-index above UI */
+.upload-area input[type="file"] {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important;
+  cursor: pointer !important;
+  z-index: 20 !important;
+  font-size: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* Visual placeholder (no pointer-events so clicks go to input) */
+.upload-ui {
+  pointer-events: none;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: .55rem;
+}
+.upload-ui-icon {
+  width: 60px; height: 60px; border-radius: 16px;
+  background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+  display: flex; align-items: center; justify-content: center; font-size: 1.75rem;
+}
+.upload-ui-title { font-size: .97rem; font-weight: 700; color: #4f46e5; }
+.upload-ui-sub { font-size: .78rem; color: #aaa; }
+.upload-ui-pill {
+  display: inline-flex; align-items: center; gap: .4rem; margin-top: .2rem;
+  padding: .4rem 1.1rem; background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff; border-radius: 20px; font-size: .82rem; font-weight: 700;
+}
+.upload-ui-pill svg { width: 13px; height: 13px; }
+
+/* Preview box */
+#img-preview-box {
+  display: none; margin-top: .75rem;
+  border-radius: 14px; overflow: hidden;
+  border: 1.5px solid #e8e8e8; position: relative;
+}
+#img-preview-box img { width: 100%; max-height: 250px; object-fit: cover; display: block; }
+.preview-footer {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
+  padding: .75rem 1rem; display: flex; align-items: center;
+}
+.preview-fname { font-size: .82rem; font-weight: 600; color: #fff; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.preview-change-btn {
+  flex-shrink: 0; margin-left: .75rem;
+  background: rgba(255,255,255,.25); color: #fff; border: none;
+  border-radius: 8px; padding: .3rem .8rem; font-size: .78rem; font-weight: 700;
+  cursor: pointer; backdrop-filter: blur(6px); font-family: inherit;
+  transition: background .15s;
+}
+.preview-change-btn:hover { background: rgba(255,255,255,.4); }
+
+/* ── Errors ── */
+.maison-form ul { font-size: .78rem; color: #dc2626; margin-top: .2rem; padding: 0; list-style: none; }
+
+/* ── Footer ── */
+.form-footer {
+  display: flex; align-items: center; gap: .9rem;
+  margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0;
+}
+.btn-submit {
+  display: inline-flex; align-items: center; gap: .55rem;
+  padding: .8rem 2rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #fff; border: none; border-radius: 12px;
+  font-size: .95rem; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer; letter-spacing: .01em;
+  box-shadow: 0 4px 18px rgba(99,102,241,.4);
+  transition: opacity .2s, transform .15s;
+}
+.btn-submit:hover { opacity: .9; transform: translateY(-2px); }
+.btn-submit svg { width: 18px; height: 18px; }
+.btn-reset-f {
+  background: none; border: 1.5px solid #e8e8e8; border-radius: 12px;
+  padding: .8rem 1.4rem; font-size: .9rem; font-weight: 500; color: #888;
+  font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all .15s;
+}
+.btn-reset-f:hover { background: #f8f8f8; color: #555; }
+</style>
+
+{# ─────────── Section 1 : Informations ─────────── #}
+<div class="fsection">
+  <div class="fsection-icon" style="background:#ede9fe">🏠</div>
+  <div class="fsection-title">Informations générales</div>
+</div>
+
+<div class="fgrid">
+  <div class="fgroup full">
+    {{ form_label(form.title, 'Titre de la propriété') }}
+    {{ form_widget(form.title, {'attr': {'placeholder': 'Ex : Villa Jasmin avec piscine — Hammamet', 'style': 'font-weight:600;font-size:.98rem;'}}) }}
+    {{ form_errors(form.title) }}
+  </div>
+
+  <div class="fgroup">
+    {{ form_label(form.city, 'Ville / Région') }}
+    {{ form_widget(form.city, {'attr': {'placeholder': 'Ex : Hammamet, Sousse…'}}) }}
+    {{ form_errors(form.city) }}
+  </div>
+
+  <div class="fgroup">
+    {{ form_label(form.price, 'Prix par nuit') }}
+    <div class="price-wrap">
+      {{ form_widget(form.price, {'attr': {'placeholder': '0', 'min': '0'}}) }}
+      <span class="price-unit">TND</span>
+    </div>
+    {{ form_errors(form.price) }}
+  </div>
+
+  <div class="fgroup full">
+    {{ form_label(form.description, 'Description détaillée') }}
+    {{ form_widget(form.description, {'attr': {'placeholder': 'Décrivez la maison : équipements, capacité, points forts…', 'rows': '5'}}) }}
+    {{ form_errors(form.description) }}
+  </div>
+</div>
+
+<div class="fsection-sep"></div>
+
+{# ─────────── Section 2 : Propriétaire ─────────── #}
+<div class="fsection">
+  <div class="fsection-icon" style="background:#f0fdf4">👤</div>
+  <div class="fsection-title">Propriétaire associé</div>
+</div>
+
+<div class="fgrid">
+  <div class="fgroup full">
+    {{ form_label(form.proprietaires, 'Sélectionner le propriétaire') }}
+    <div class="select-wrap">
+      {{ form_widget(form.proprietaires, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    {{ form_errors(form.proprietaires) }}
+  </div>
+</div>
+
+<div class="fsection-sep"></div>
+
+{# ─────────── Section 3 : Photo ─────────── #}
+<div class="fsection">
+  <div class="fsection-icon" style="background:#fff7ed">🖼️</div>
+  <div class="fsection-title">Photo principale</div>
+</div>
+
+<div class="fgroup">
+  <div class="upload-area" id="upload-area">
+    {{- form_widget(form.image, {'attr': {
+      'id': 'file-input',
+      'accept': 'image/jpeg,image/png,image/webp,image/gif'
+    }}) -}}
+    <div class="upload-ui" id="upload-ui">
+      <div class="upload-ui-icon">📸</div>
+      <div class="upload-ui-title">Choisir une photo</div>
+      <div class="upload-ui-sub">JPG · PNG · WEBP — max 5 Mo</div>
+      <div class="upload-ui-pill">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        Parcourir
+      </div>
+    </div>
+  </div>
+
+  <div id="img-preview-box">
+    <img id="img-preview-el" src="" alt="Aperçu">
+    <div class="preview-footer">
+      <span class="preview-fname" id="preview-fname">photo.jpg</span>
+      <button type="button" class="preview-change-btn" id="change-photo-btn">✎ Changer</button>
+    </div>
+  </div>
+
+  {{ form_errors(form.image) }}
+</div>
+
+{# ─────────── Submit ─────────── #}
+<div class="form-footer">
+  <button type="submit" class="btn-submit">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+    </svg>
+    {{ button_label|default('Enregistrer la maison') }}
+  </button>
+  <button type="reset" class="btn-reset-f">Réinitialiser</button>
+</div>
+
+{{ form_end(form) }}
+
+<script>
+(function () {
+  var input      = document.getElementById('file-input');
+  var area       = document.getElementById('upload-area');
+  var ui         = document.getElementById('upload-ui');
+  var previewBox = document.getElementById('img-preview-box');
+  var previewImg = document.getElementById('img-preview-el');
+  var fnameEl    = document.getElementById('preview-fname');
+  var changeBtn  = document.getElementById('change-photo-btn');
+  var form       = document.querySelector('.maison-form');
+
+  function showPreview(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      previewImg.src = e.target.result;
+      fnameEl.textContent = file.name;
+      previewBox.style.display = 'block';
+      ui.style.display = 'none';
+      area.style.borderStyle = 'solid';
+      area.style.borderColor = '#6366f1';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function resetUpload() {
+    previewBox.style.display = 'none';
+    previewImg.src = '';
+    ui.style.display = 'flex';
+    area.style.borderStyle = 'dashed';
+    area.style.borderColor = '#d1d5db';
+  }
+
+  if (input) {
+    input.addEventListener('change', function () {
+      if (this.files && this.files[0]) showPreview(this.files[0]);
+    });
+  }
+
+  if (changeBtn && input) {
+    changeBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      input.value = '';
+      input.click();
+    });
+  }
+
+  if (area) {
+    area.addEventListener('dragover', function (e) { e.preventDefault(); area.classList.add('drag-over'); });
+    area.addEventListener('dragleave', function () { area.classList.remove('drag-over'); });
+    area.addEventListener('drop', function (e) {
+      e.preventDefault();
+      area.classList.remove('drag-over');
+      var files = e.dataTransfer.files;
+      if (files && files[0]) {
+        try { var dt = new DataTransfer(); dt.items.add(files[0]); input.files = dt.files; } catch(err) {}
+        showPreview(files[0]);
+      }
+    });
+  }
+
+  if (form) {
+    form.addEventListener('reset', function () {
+      setTimeout(resetUpload, 0);
+    });
+  }
+})();
+</script>

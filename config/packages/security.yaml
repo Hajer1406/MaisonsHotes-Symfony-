@@ -1,0 +1,56 @@
+# config/packages/security.yaml
+security:
+    # Hachage des mots de passe
+    password_hashers:
+        App\Entity\User: 'auto'
+
+    # Fournisseur d'utilisateurs : utilise votre entité User et le champ 'email' comme identifiant
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        # Le firewall 'dev' laisse passer les assets et le profiler en développement
+        dev:
+            pattern: ^/(_profiler|_wdt|css|images|js)/
+            security: false
+
+        # Firewall principal
+        main:
+            lazy: true
+            provider: app_user_provider
+
+            # Authentification par formulaire
+            form_login:
+                login_path: login                # nom de la route du formulaire de connexion
+                check_path: login                # même route pour la vérification des identifiants
+                default_target_path: app_maison_index   # redirection après connexion réussie
+
+            # Déconnexion
+            logout:
+                path: app_logout                 # route de déconnexion (à créer dans routes.yaml)
+                target: login                     # redirection après déconnexion (vers l'accueil)
+
+            # Vous pouvez décommenter cette ligne si vous souhaitez activer l'impersonation
+            # switch_user: true
+
+    # Contrôle d'accès : les règles sont appliquées dans l'ordre
+    access_control:
+    - { path: ^/login$, roles: PUBLIC_ACCESS }
+    - { path: ^/register$, roles: PUBLIC_ACCESS }
+    - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
+    - { path: ^/update-password, roles: PUBLIC_ACCESS }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/, roles: ROLE_USER }
+
+# Configuration spécifique pour l'environnement de test (peut être conservée)
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

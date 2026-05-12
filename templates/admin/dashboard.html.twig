@@ -1,0 +1,338 @@
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block main %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body {
+    background: #f1f5f9;
+    overflow-x: hidden;
+}
+
+/* GLOBAL */
+.dashboard {
+    font-family: 'Inter', sans-serif;
+    margin: -30px;
+    width: calc(100% + 60px);
+}
+
+/* HERO */
+.hero {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    padding: 40px;
+    color: white;
+    border-radius: 0 0 25px 25px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.hero h1 {
+    font-family: 'Poppins';
+    font-weight: 800;
+}
+
+/* KPI */
+.stats {
+    padding: 30px 40px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    transition: .3s;
+}
+.stat-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.15);
+    border: 1.5px solid #6366f1;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.stat-card:nth-child(1) .icon { background:#eef2ff;color:#6366f1;}
+.stat-card:nth-child(2) .icon { background:#ecfdf5;color:#10b981;}
+.stat-card:nth-child(3) .icon { background:#fff7ed;color:#f59e0b;}
+.stat-card:nth-child(4) .icon { background:#fdf2f8;color:#ec4899;}
+
+.value {
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.label {
+    color: #64748b;
+    font-weight: 600;
+}
+
+/* CHARTS */
+.charts {
+    padding: 20px 40px 40px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.chart-title {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+canvas {
+    height: 280px !important;
+}
+
+@media(max-width:1000px){
+    .grid{grid-template-columns:1fr;}
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+</style>
+
+<div class="dashboard">
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1><i class="fas fa-chart-line"></i> Tableau de bord</h1>
+        <p>Analyse complète de votre activité</p>
+    </div>
+
+   <!-- KPIs -->
+<div class="stats">
+    <div class="stats-grid">
+
+        <a href="{{ ea_url().setController('App\\Controller\\Admin\\MaisonCrudController').setAction('index') }}" class="stat-link">
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-home"></i></div>
+                <div class="value">{{ stats.maisons }}</div>
+                <div class="label">Maisons</div>
+            </div>
+        </a>
+
+        <a href="{{ ea_url()
+    .setController('App\\Controller\\Admin\\ReservationCrudController')
+    .setAction('index')
+    .set('filters[paye]', '1') }}" class="stat-link">
+    <div class="stat-card">
+        <div class="icon"><i class="fas fa-coins"></i></div>
+        <div class="value">{{ stats.totalRevenue }}</div>
+        <div class="label">Revenus</div>
+    </div>
+</a>
+
+        <a href="{{ ea_url().setController('App\\Controller\\Admin\\ReservationCrudController').setAction('index') }}" class="stat-link">
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-calendar"></i></div>
+                <div class="value">{{ stats.reservations }}</div>
+                <div class="label">Réservations</div>
+            </div>
+        </a>
+
+        <a href="{{ ea_url()
+    .setController('App\\Controller\\Admin\\ReservationCrudController')
+    .setAction('index')
+    .set('filters[paye]', '0') }}" class="stat-link">
+    <div class="stat-card">
+        <div class="icon"><i class="fas fa-clock"></i></div>
+        <div class="value">{{ stats.pendingPayments }}</div>
+        <div class="label">En attente</div>
+    </div>
+</a>
+
+    </div>
+</div>
+
+    <!-- CHARTS -->
+    <div class="charts">
+        <div class="grid">
+
+            <div class="chart-card">
+                <div class="chart-title">📈 Revenus mensuels</div>
+                <canvas id="revenueChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">💳 Paiements</div>
+                <canvas id="paymentChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">🏠 Top maisons</div>
+                <canvas id="topChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">🌍 Villes</div>
+                <canvas id="cityChart"></canvas>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+// GLOBAL
+Chart.defaults.font.family = 'Inter';
+Chart.defaults.color = '#64748b';
+
+// GRADIENT
+function gradient(ctx, c1, c2){
+    const g = ctx.createLinearGradient(0,0,0,300);
+    g.addColorStop(0,c1);
+    g.addColorStop(1,c2);
+    return g;
+}
+
+// REVENUE
+const ctx1 = document.getElementById('revenueChart').getContext('2d');
+new Chart(ctx1,{
+    type:'line',
+    data:{
+        labels:['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'],
+        datasets:[{
+            data: {{ monthlyRevenue|default([])|json_encode|raw }},
+            borderColor:'#6366f1',
+            backgroundColor:gradient(ctx1,'rgba(99,102,241,0.4)','rgba(99,102,241,0)'),
+            fill:true,
+            tension:.4,
+            borderWidth:3,
+            pointRadius:4
+        }]
+    },
+    options:{
+        plugins:{legend:{display:false}},
+        scales:{
+            x:{grid:{display:false}},
+            y:{grid:{color:'#e2e8f0'}}
+        }
+    }
+});
+
+// PAYMENT
+// On extrait les valeurs pour les calculs
+const dataPaid = {{ stats.paidReservations|default(0) }};
+const dataPending = {{ stats.pendingPayments|default(0) }};
+const total = dataPaid + dataPending;
+const percentage = total > 0 ? Math.round((dataPaid / total) * 100) : 0;
+
+new Chart(document.getElementById('paymentChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Payé', 'En attente'],
+        datasets: [{
+            data: [dataPaid, dataPending],
+            backgroundColor: ['#10b981', '#f59e0b'],
+            borderWidth: 0,
+            hoverOffset: 4
+        }]
+    },
+    options: {
+        cutout: '80%', // On élargit un peu le centre pour le texte
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    usePointStyle: true,
+                    font: { family: 'Inter', size: 12, weight: '600' }
+                }
+            }
+        }
+    },
+    // AJOUT DU PLUGIN POUR LE TEXTE AU CENTRE
+    plugins: [{
+        id: 'centerText',
+        afterDraw: (chart) => {
+            const { ctx, chartArea: { left, top, width, height } } = chart;
+            ctx.save();
+
+            const centerX = left + width / 2;
+            const centerY = top + height / 2;
+
+            // Dessiner le Pourcentage
+            ctx.font = 'bold 30px Inter, sans-serif';
+            ctx.fillStyle = '#1e293b';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(percentage + '%', centerX, centerY - 5);
+
+            // Dessiner le petit texte "PAYÉ"
+            ctx.font = '700 12px Inter, sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText('PAYÉ', centerX, centerY + 20);
+
+            ctx.restore();
+        }
+    }]
+});
+
+// TOP MAISONS
+new Chart(document.getElementById('topChart'),{
+    type:'bar',
+    data:{
+        labels: {{ mostReserved|map(i=>i.title)|json_encode|raw }},
+        datasets:[{
+            data: {{ mostReserved|map(i=>i.howMany)|json_encode|raw }},
+            backgroundColor:'#6366f1',
+            borderRadius:10
+        }]
+    },
+    options:{
+        indexAxis:'y',
+        plugins:{legend:{display:false}}
+    }
+});
+
+// CITY
+new Chart(document.getElementById('cityChart'),{
+    type:'pie',
+    data:{
+        labels: {{ housesByCity|map(c=>c.city)|json_encode|raw }},
+        datasets:[{
+            data: {{ housesByCity|map(c=>c.count)|json_encode|raw }},
+            backgroundColor:['#6366f1','#10b981','#f59e0b','#ef4444']
+        }]
+    }
+});
+
+</script>
+
+{% endblock %}

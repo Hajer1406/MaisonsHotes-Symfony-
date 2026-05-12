@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Compte | {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Profile Card -->
+            <div class="card shadow-lg border-0 mb-4">
+                <div class="card-body text-center p-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="mb-4">
+                        <div class="avatar-circle mx-auto mb-3" style="width: 120px; height: 120px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                            <i class="fas fa-user" style="font-size: 4rem; color: #667eea;"></i>
+                        </div>
+                        <h2 class="text-white mb-2 fw-bold">{{ user.fullName }}</h2>
+                        <span class="badge bg-white text-primary px-3 py-2">
+                            <i class="fas fa-shield-alt me-1"></i>{{ user.roles|first | replace({'ROLE_': ''}) | capitalize }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Card -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom">
+                    <h4 class="mb-0 text-primary">
+                        <i class="fas fa-id-card me-2"></i>Informations du compte
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="info-item p-3 bg-light rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-user text-primary me-2" style="font-size: 1.2rem;"></i>
+                                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Nom</small>
+                                </div>
+                                <h5 class="mb-0 fw-bold">{{ user.lastName ?: 'Non défini' }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="info-item p-3 bg-light rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-user text-primary me-2" style="font-size: 1.2rem;"></i>
+                                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Prénom</small>
+                                </div>
+                                <h5 class="mb-0 fw-bold">{{ user.firstName ?: 'Non défini' }}</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="info-item p-3 bg-light rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-envelope text-primary me-2" style="font-size: 1.2rem;"></i>
+                                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Email</small>
+                                </div>
+                                <h6 class="mb-0">{{ user.email ?: 'Non défini' }}</h6>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="info-item p-3 bg-light rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-at text-primary me-2" style="font-size: 1.2rem;"></i>
+                                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Nom d'utilisateur</small>
+                                </div>
+                                <h6 class="mb-0">{{ user.username }}</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="info-item p-3 bg-light rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-shield-alt text-primary me-2" style="font-size: 1.2rem;"></i>
+                                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">Rôle</small>
+                                </div>
+                                <span class="badge bg-primary px-3 py-2" style="font-size: 0.9rem;">
+                                    <i class="fas fa-user-tag me-1"></i>{{ user.roles|first | replace({'ROLE_': ''}) | capitalize }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Card -->
+            <div class="card shadow-sm border-0 mt-4">
+                <div class="card-body p-4">
+                    <h5 class="mb-3 text-primary">
+                        <i class="fas fa-cogs me-2"></i>Actions rapides
+                    </h5>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <a href="{{ path('app_maison_index') }}" class="btn btn-outline-primary w-100 py-3">
+                                <i class="fas fa-home mb-2" style="font-size: 1.5rem;"></i>
+                                <div>Voir les maisons</div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ path('app_reservation_index') }}" class="btn btn-outline-success w-100 py-3">
+                                <i class="fas fa-calendar-check mb-2" style="font-size: 1.5rem;"></i>
+                                <div>Mes réservations</div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ path('app_logout') }}" class="btn btn-outline-danger w-100 py-3">
+                                <i class="fas fa-sign-out-alt mb-2" style="font-size: 1.5rem;"></i>
+                                <div>Déconnexion</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends '@!EasyAdmin/crud/new.html.twig' %}
+
+{% block main %}
+    <div style="background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.03); overflow: hidden;">
+        <div style="padding: 20px 24px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+            <h1 style="font-family: Poppins, sans-serif; font-size: 1.25rem; font-weight: 600; color: #1e293b; margin: 0;">
+                <i class="fas fa-plus-circle" style="color: #10b981; margin-right: 10px;"></i>
+                Ajouter un nouvel élément
+            </h1>
+        </div>
+        <div style="padding: 24px;">
+            {% block new_form %}
+                {{ parent() }}
+            {% endblock new_form %}
+        </div>
+    </div>
+{% endblock main %}

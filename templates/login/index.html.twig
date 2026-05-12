@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion | {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="auth-container">
+    <div class="auth-card animate-scale-in">
+
+        <!-- Header -->
+        <div class="auth-header">
+            <div class="mb-3">
+                <span style="font-size: 3rem;">🏡</span>
+            </div>
+            <h1>Connexion</h1>
+            <p>Accédez à votre espace personnel</p>
+        </div>
+
+        <!-- Body -->
+        <div class="auth-body">
+
+            {% if error %}
+                <div class="alert alert-modern alert-danger animate-fade-in">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            {% for message in app.flashes('notice') %}
+                <div class="alert alert-modern alert-success animate-fade-in">
+                    <i class="fas fa-check-circle"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% if app.user %}
+                <div class="text-center py-4">
+                    <i class="fas fa-user-circle text-gradient-ocean" style="font-size: 4rem;"></i>
+                    <p class="text-muted mb-2 mt-3">Vous êtes connecté en tant que</p>
+                    <p class="fw-bold fs-5">{{ app.user.email }}</p>
+                    <a href="{{ path('app_logout') }}" class="btn btn-modern btn-primary-modern mt-3">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </a>
+                </div>
+            {% else %}
+                {# ✅ action vide = soumet vers la même route, Symfony intercepte #}
+                <form action="{{ path('login') }}" method="post" class="form-modern">
+
+                    <div class="mb-4">
+                        <label for="username" class="form-label">
+                            <i class="fas fa-envelope me-1"></i>Email
+                        </label>
+                        <input type="email"
+                               class="form-control"
+                               id="username"
+                               name="_username"
+                               value="{{ last_username }}"
+                               placeholder="Entrez votre adresse email"
+                               autofocus required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-lock me-1"></i>Mot de passe
+                        </label>
+                        <input type="password"
+                               class="form-control"
+                               id="password"
+                               name="_password"
+                               placeholder="Entrez votre mot de passe"
+                               required>
+                    </div>
+
+                    {# ✅ CSRF token obligatoire #}
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <div class="d-grid mb-4">
+                        <button type="submit" class="btn btn-modern btn-gradient-ocean btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Se connecter
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="{{ path('reset_password') }}" class="text-decoration-none text-muted">
+                            <i class="fas fa-key me-1"></i>Mot de passe oublié ?
+                        </a>
+                    </div>
+
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- Footer -->
+        {% if not app.user %}
+        <div class="auth-footer">
+            <p class="mb-0">
+                Pas encore de compte ?
+                <a href="{{ path('app_register') }}" class="text-gradient fw-bold">Créer un compte</a>
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

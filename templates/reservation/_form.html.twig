@@ -1,0 +1,97 @@
+{{ form_start(form, {'attr': {'class': 'pro-form', 'novalidate': 'novalidate'}}) }}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+.pro-form { font-family: 'Plus Jakarta Sans', sans-serif; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.form-group { display: flex; flex-direction: column; gap: .45rem; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label {
+  font-size: .78rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .07em; color: #666;
+}
+.pro-form select,
+.pro-form input[type="text"],
+.pro-form input[type="email"],
+.pro-form input[type="tel"],
+.pro-form input[type="date"],
+.pro-form input[type="datetime-local"] {
+  padding: .65rem 1rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: .9rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #1a1a2e;
+  background: #fff;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.pro-form select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 2.2rem; }
+.pro-form select:focus,
+.pro-form input:focus {
+  border-color: #f5576c;
+  box-shadow: 0 0 0 3px rgba(245,87,108,.1);
+}
+.pro-form .form-error {
+  font-size: .78rem; color: #dc2626; margin-top: .25rem;
+}
+.select-wrap { position: relative; }
+.select-wrap svg {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  pointer-events: none; color: #999; width: 16px; height: 16px;
+}
+.form-actions { display: flex; align-items: center; gap: .75rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0; }
+.btn-save {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .65rem 1.5rem;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: #fff; border: none; border-radius: 10px; font-size: .9rem;
+  font-weight: 600; font-family: inherit; cursor: pointer;
+  transition: opacity .2s, transform .15s;
+  box-shadow: 0 3px 10px rgba(245,87,108,.3);
+}
+.btn-save:hover { opacity: .9; transform: translateY(-1px); }
+.btn-save svg { width: 16px; height: 16px; }
+</style>
+
+<div class="form-grid">
+  <div class="form-group">
+    {{ form_label(form.client, 'Client', {'label_attr': {}}) }}
+    <div class="select-wrap">
+      {{ form_widget(form.client, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    {{ form_errors(form.client) }}
+  </div>
+
+  <div class="form-group">
+    {{ form_label(form.maison, 'Maison', {'label_attr': {}}) }}
+    <div class="select-wrap">
+      {{ form_widget(form.maison, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    {{ form_errors(form.maison) }}
+  </div>
+
+  <div class="form-group">
+    {{ form_label(form.dateDebut, 'Date de début', {'label_attr': {}}) }}
+    {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.dateDebut) }}
+  </div>
+
+  <div class="form-group">
+    {{ form_label(form.dateFin, 'Date de fin', {'label_attr': {}}) }}
+    {{ form_widget(form.dateFin, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.dateFin) }}
+  </div>
+</div>
+
+<div class="form-actions">
+  <button type="submit" class="btn-save">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    Enregistrer
+  </button>
+</div>
+
+{{ form_end(form) }}

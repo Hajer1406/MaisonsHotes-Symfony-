@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nouveau Client{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+.page-wrapper { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8f7f4; min-height: calc(100vh - 200px); padding: 2.5rem 2rem 4rem; }
+.page-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+.page-icon { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(102,126,234,.35); flex-shrink: 0; }
+.page-icon svg { width: 26px; height: 26px; fill: #fff; }
+.page-title { font-size: 1.7rem; font-weight: 700; color: #1a1a2e; letter-spacing: -.03em; }
+.page-subtitle { font-size: .85rem; color: #888; margin-top: 2px; }
+.form-card { background: #fff; border: 1px solid #ebebeb; border-radius: 18px; padding: 2rem 2.25rem; max-width: 680px; }
+.btn-back { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem 1rem; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: .85rem; font-weight: 500; color: #555; text-decoration: none; transition: all .15s; }
+.btn-back:hover { background: #f8f7f4; color: #1a1a2e; text-decoration: none; }
+.btn-back svg { width: 15px; height: 15px; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+  <div class="page-header">
+    <div class="page-icon">
+      <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V8H4v2H2v2h2v2h2v-2h2v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    </div>
+    <div>
+      <div class="page-title">Nouveau client</div>
+      <div class="page-subtitle">Ajouter un client à la base</div>
+    </div>
+  </div>
+  <div class="form-card">
+    {{ include('client/_form.html.twig') }}
+  </div>
+  <div style="margin-top: 1rem;">
+    <a href="{{ path('app_client_index') }}" class="btn-back">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      Retour à la liste
+    </a>
+  </div>
+</div>
+{% endblock %}

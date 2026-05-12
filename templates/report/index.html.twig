@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Maisons les plus réservées{% endblock %}
+
+{% block body %}
+<h1>Maisons les plus réservées</h1>
+
+<table class="table table-striped">
+    <tr>
+        <th>Maison</th>
+        <th>Nombre de réservations</th>
+    </tr>
+
+    {% for maison in maisons %}
+        <tr>
+            <td>{{ maison.title }}</td>
+            <td>{{ maison.howMany }}</td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

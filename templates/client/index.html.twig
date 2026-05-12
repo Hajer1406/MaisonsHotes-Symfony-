@@ -1,0 +1,348 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clients — Maisons d'hôtes{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  .page-wrapper {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: calc(100vh - 200px);
+    background: #f8f7f4;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  /* ── Page header ── */
+  .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .page-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .page-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(102,126,234,.35);
+  }
+  .page-icon svg { width: 26px; height: 26px; fill: #fff; }
+  .page-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: -.03em;
+  }
+  .page-subtitle {
+    font-size: .85rem;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  /* ── Stats row ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 14px;
+    padding: 1.1rem 1.3rem;
+  }
+  .stat-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: .35rem; }
+  .stat-value { font-size: 2rem; font-weight: 700; color: #1a1a2e; line-height: 1; }
+  .stat-value.accent { color: #667eea; }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .search-box {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 340px;
+  }
+  .search-box svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #bbb;
+  }
+  .search-box input {
+    width: 100%;
+    padding: .55rem .9rem .55rem 2.2rem;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 10px;
+    font-size: .875rem;
+    font-family: inherit;
+    background: #fff;
+    color: #1a1a2e;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .search-box input:focus { border-color: #667eea; }
+  .search-box input::placeholder { color: #bbb; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .58rem 1.25rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: .875rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity .2s, transform .15s;
+    box-shadow: 0 3px 10px rgba(102,126,234,.3);
+  }
+  .btn-primary:hover { opacity: .9; transform: translateY(-1px); color: #fff; text-decoration: none; }
+  .btn-primary svg { width: 16px; height: 16px; }
+
+  /* ── Table ── */
+  .table-card {
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .data-table thead th {
+    background: #fafafa;
+    padding: .85rem 1.25rem;
+    text-align: left;
+    font-size: .72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #999;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .data-table tbody tr {
+    border-bottom: 1px solid #f5f5f5;
+    transition: background .12s;
+  }
+  .data-table tbody tr:last-child { border-bottom: none; }
+  .data-table tbody tr:hover { background: #fafafa; }
+  .data-table td {
+    padding: .95rem 1.25rem;
+    font-size: .9rem;
+    color: #333;
+    vertical-align: middle;
+  }
+
+  /* ── Avatar cell ── */
+  .client-cell { display: flex; align-items: center; gap: .75rem; }
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    font-weight: 700;
+    color: #4f46e5;
+    flex-shrink: 0;
+  }
+  .client-name { font-weight: 600; color: #1a1a2e; font-size: .9rem; }
+
+  /* ── Email cell ── */
+  .email-link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: .875rem;
+  }
+  .email-link:hover { text-decoration: underline; }
+  .email-empty { color: #ccc; font-style: italic; font-size: .875rem; }
+
+  /* ── Action buttons ── */
+  .actions-cell { display: flex; gap: .5rem; }
+  .btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .38rem .8rem;
+    border-radius: 8px;
+    font-size: .8rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+    transition: all .15s;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .btn-action svg { width: 13px; height: 13px; }
+  .btn-show {
+    background: #f0f4ff;
+    color: #4f46e5;
+    border-color: #dde4ff;
+  }
+  .btn-show:hover { background: #e0e7ff; color: #3730a3; text-decoration: none; }
+  .btn-edit {
+    background: #f0fdf4;
+    color: #16a34a;
+    border-color: #bbf7d0;
+  }
+  .btn-edit:hover { background: #dcfce7; color: #15803d; text-decoration: none; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #bbb;
+  }
+  .empty-state svg { width: 56px; height: 56px; margin-bottom: 1rem; opacity: .4; }
+  .empty-state p { font-size: 1rem; font-weight: 500; }
+
+  /* ── Table row counter ── */
+  .row-index {
+    font-size: .8rem;
+    color: #ccc;
+    font-weight: 600;
+    min-width: 28px;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+  {# ── Header ── #}
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-icon">
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      </div>
+      <div>
+        <div class="page-title">Clients</div>
+        <div class="page-subtitle">Gestion de la clientèle</div>
+      </div>
+    </div>
+  </div>
+
+  {# ── Stats ── #}
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total clients</div>
+      <div class="stat-value accent">{{ clients|length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avec email</div>
+      <div class="stat-value">{{ clients|filter(c => c.email is not empty)|length }}</div>
+    </div>
+  </div>
+
+  {# ── Toolbar ── #}
+  <div class="toolbar">
+    <div class="search-box">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="clientSearch" placeholder="Rechercher un client..." oninput="filterTable('clientSearch','clientTable')">
+    </div>
+    <a href="{{ path('app_client_new') }}" class="btn-primary">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+      Nouveau client
+    </a>
+  </div>
+
+  {# ── Table ── #}
+  <div class="table-card">
+    <table class="data-table" id="clientTable">
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for client in clients %}
+        <tr>
+          <td class="row-index">{{ loop.index }}</td>
+          <td>
+            <div class="client-cell">
+              <div class="avatar">{{ client.name|first|upper }}{{ client.surname|first|upper }}</div>
+              <span class="client-name">{{ client.name }}</span>
+            </div>
+          </td>
+          <td>{{ client.surname }}</td>
+          <td>
+            {% if client.email %}
+              <a href="mailto:{{ client.email }}" class="email-link">{{ client.email }}</a>
+            {% else %}
+              <span class="email-empty">—</span>
+            {% endif %}
+          </td>
+          <td>{{ client.phone ?: '—' }}</td>
+          <td>
+            <div class="actions-cell">
+              <a href="{{ path('app_client_show', {'id': client.id}) }}" class="btn-action btn-show">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Voir
+              </a>
+              <a href="{{ path('app_client_edit', {'id': client.id}) }}" class="btn-action btn-edit">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Modifier
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <p>Aucun client enregistré</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function filterTable(inputId, tableId) {
+  const q = document.getElementById(inputId).value.toLowerCase();
+  document.querySelectorAll('#' + tableId + ' tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

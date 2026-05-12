@@ -1,0 +1,56 @@
+{# Widget chatbot Yasmine - Maisons d'hôtes Tunisie #}
+
+<!-- Bouton flottant -->
+<div id="chatbot-bubble" onclick="toggleChat()" title="Discuter avec Yasmine">
+    <i class="fas fa-comment-dots"></i>
+    <span class="chatbot-badge" id="chatbot-badge">1</span>
+</div>
+
+<!-- Panneau chatbot -->
+<div id="chatbot-panel">
+    <!-- Header -->
+    <div class="chatbot-header">
+        <div class="chatbot-avatar-wrap">
+            <span class="chatbot-avatar-emoji">🏡</span>
+            <span class="chatbot-online-dot"></span>
+        </div>
+        <div class="chatbot-header-info">
+            <div class="chatbot-name">Yasmine</div>
+            <div class="chatbot-status">● En ligne — Assistante Maisons d'hôtes</div>
+        </div>
+        <button onclick="toggleChat()" class="chatbot-close" title="Fermer">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Messages -->
+    <div id="chatbot-messages" class="chatbot-messages">
+        <div class="chat-date-label">Aujourd'hui</div>
+        <div class="bot-msg">
+            Marhba bik ! 👋 Je suis <strong>Yasmine</strong>, votre assistante maisons d'hôtes en Tunisie.<br>
+            Comment puis-je vous aider ?
+        </div>
+        <!-- Suggestions rapides -->
+        <div class="chatbot-suggestions">
+            <button class="suggestion-btn" onclick="sendSuggestion('Quelles maisons sont disponibles à Djerba ?')">🏖️ Djerba</button>
+            <button class="suggestion-btn" onclick="sendSuggestion('Quelles sont vos maisons à Sidi Bou Saïd ?')">🌊 Sidi Bou Saïd</button>
+            <button class="suggestion-btn" onclick="sendSuggestion('Quels sont vos tarifs ?')">💰 Tarifs</button>
+            <button class="suggestion-btn" onclick="sendSuggestion('Comment faire une réservation ?')">📅 Réserver</button>
+        </div>
+    </div>
+
+    <!-- Zone de saisie -->
+    <div class="chatbot-input-row">
+        <input
+            id="chatbot-input"
+            type="text"
+            placeholder="Écrivez votre question…"
+            onkeydown="if(event.key==='Enter') sendChat()"
+            autocomplete="off"
+        />
+        <button onclick="sendChat()" id="chatbot-send-btn" title="Envoyer">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+    <div class="chatbot-footer-note">Propulsé par IA · Réponse en quelques secondes</div>
+</div>

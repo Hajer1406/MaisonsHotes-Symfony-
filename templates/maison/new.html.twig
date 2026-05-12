@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nouvelle Maison — Maisons d'hôtes{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+.page-wrapper {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #f8f7f4;
+  min-height: calc(100vh - 200px);
+  padding: 2.5rem 2rem 4rem;
+}
+
+.page-header { display: flex; align-items: center; gap: 1.1rem; margin-bottom: 2rem; }
+.page-icon {
+  width: 54px; height: 54px; border-radius: 15px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(99,102,241,.35); flex-shrink: 0;
+}
+.page-icon svg { width: 28px; height: 28px; fill: #fff; }
+.page-title { font-size: 1.75rem; font-weight: 700; color: #1a1a2e; letter-spacing: -.03em; }
+.page-subtitle { font-size: .85rem; color: #999; margin-top: 3px; }
+
+.layout { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: start; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+.form-card {
+  background: #fff;
+  border: 1px solid #ebebeb;
+  border-radius: 20px;
+  padding: 2rem 2.25rem;
+}
+
+/* Tips sidebar */
+.tips-card {
+  background: #fff;
+  border: 1px solid #ebebeb;
+  border-radius: 20px;
+  padding: 1.5rem;
+  position: sticky;
+  top: 1.5rem;
+}
+.tips-title {
+  font-size: .78rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: #bbb; margin-bottom: 1.1rem;
+}
+.tip-item {
+  display: flex; align-items: flex-start; gap: .75rem;
+  margin-bottom: 1rem; padding-bottom: 1rem;
+  border-bottom: 1px solid #f5f5f5;
+}
+.tip-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.tip-icon {
+  width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 1rem;
+}
+.tip-text { font-size: .83rem; color: #555; line-height: 1.5; }
+.tip-text strong { color: #1a1a2e; font-weight: 600; display: block; margin-bottom: .15rem; }
+
+.btn-back {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .5rem 1rem; background: #fff; border: 1.5px solid #e5e7eb;
+  border-radius: 10px; font-size: .85rem; font-weight: 500; color: #555;
+  text-decoration: none; transition: all .15s; font-family: inherit;
+}
+.btn-back:hover { background: #f8f7f4; color: #1a1a2e; text-decoration: none; }
+.btn-back svg { width: 15px; height: 15px; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <div class="page-icon">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </div>
+    <div>
+      <div class="page-title">Nouvelle maison</div>
+      <div class="page-subtitle">Renseignez les détails de la propriété</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="form-card">
+      {{ include('maison/_form.html.twig') }}
+    </div>
+
+    <div>
+      <div class="tips-card">
+        <div class="tips-title">💡 Conseils</div>
+
+        <div class="tip-item">
+          <div class="tip-icon" style="background:#f5f3ff">📝</div>
+          <div class="tip-text"><strong>Titre accrocheur</strong>Soyez précis et évocateur. Ex: "Villa avec piscine — Hammamet"</div>
+        </div>
+
+        <div class="tip-item">
+          <div class="tip-icon" style="background:#f0fdf4">🏙️</div>
+          <div class="tip-text"><strong>Ville exacte</strong>Indiquez la ville ou le quartier pour aider à la localisation.</div>
+        </div>
+
+        <div class="tip-item">
+          <div class="tip-icon" style="background:#fff7ed">💰</div>
+          <div class="tip-text"><strong>Prix compétitif</strong>Comparez avec les propriétés similaires dans la même région.</div>
+        </div>
+
+        <div class="tip-item">
+          <div class="tip-icon" style="background:#eff6ff">🖼️</div>
+          <div class="tip-text"><strong>Belle photo</strong>Une image de qualité augmente les réservations de 70%.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1rem;">
+        <a href="{{ path('app_maison_index') }}" class="btn-back" style="width:100%; justify-content:center;">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Retour à la liste
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
