@@ -1,0 +1,53 @@
+classDiagram
+    class Client {
+        -int id
+        -String name
+        -String surname
+        -String email
+        -String phone
+    }
+
+    class Proprietaire {
+        -int id
+        -String name
+        -String surname
+        -String phone
+    }
+
+    class Maison {
+        -int id
+        -String title
+        -String description
+        -float price
+        -String city
+        -String image
+    }
+
+    class Reservation {
+        -int id
+        -DateTime dateDebut
+        -DateTime dateFin
+        -bool paye
+    }
+
+    class User {
+        -int id
+        -String username
+        -String email
+        -String firstName
+        -String lastName
+        -array roles
+        -String password
+    }
+
+    class ResetPassword {
+        -int id
+        -String token
+        -DateTimeImmutable createdAt
+    }
+
+    Proprietaire "1" -- "*" Maison : possède
+    Client "1" -- "*" Reservation : effectue
+    Maison "1" -- "*" Reservation : concerne
+    User "1" -- "*" ResetPassword : a
+    User "*" -- "*" Maison : favorites

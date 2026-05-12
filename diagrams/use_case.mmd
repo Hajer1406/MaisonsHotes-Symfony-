@@ -1,0 +1,40 @@
+flowchart LR
+    Visiteur([Visiteur])
+    Utilisateur([Utilisateur / Client])
+    Admin([Administrateur])
+
+    subgraph "Gestion des Maisons d'Hôtes"
+        Consulter[Consulter les maisons]
+        Rechercher[Rechercher par critères]
+        Inscrire[Créer un compte]
+        Connecter[S'authentifier]
+        Reserver[Réserver une maison]
+        Favoris[Gérer les favoris]
+        Chatbot[Utiliser le chatbot]
+        
+        GererMaison[Gérer les maisons]
+        GererProprio[Gérer les propriétaires]
+        GererClient[Gérer les clients]
+        GererResa[Gérer les réservations]
+        GererUsers[Gérer les utilisateurs]
+        ConsulterRapport[Consulter les rapports]
+    end
+
+    Visiteur --> Consulter
+    Visiteur --> Rechercher
+    Visiteur --> Inscrire
+    Visiteur --> Connecter
+    Visiteur --> Chatbot
+
+    Utilisateur --> Consulter
+    Utilisateur --> Rechercher
+    Utilisateur --> Reserver
+    Utilisateur --> Favoris
+    Utilisateur --> Chatbot
+
+    Admin --> GererMaison
+    Admin --> GererProprio
+    Admin --> GererClient
+    Admin --> GererResa
+    Admin --> GererUsers
+    Admin --> ConsulterRapport

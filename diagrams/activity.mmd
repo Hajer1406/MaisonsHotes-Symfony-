@@ -1,0 +1,18 @@
+stateDiagram-v2
+    [*] --> Visite
+    Visite --> Recherche: Consulter ou filtrer
+    Recherche --> SelectionMaison: Choix d'une maison
+    SelectionMaison --> VerificationConnexion: Clic sur "Réserver"
+    
+    VerificationConnexion --> Connexion: Non connecté
+    Connexion --> VerificationConnexion: Succès
+    
+    VerificationConnexion --> FormulaireReservation: Connecté
+    FormulaireReservation --> ValidationDonnees: Soumission
+    
+    ValidationDonnees --> FormulaireReservation: Erreurs de validation
+    ValidationDonnees --> Enregistrement: Données correctes
+    
+    Enregistrement --> GenerationFacture
+    GenerationFacture --> FinReservation: Succès
+    FinReservation --> [*]

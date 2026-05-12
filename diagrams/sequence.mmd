@@ -1,0 +1,30 @@
+sequenceDiagram
+    actor C as Client
+    participant S as Système (Symfony)
+    participant DB as Base de Données (MySQL)
+
+    C->>S: Visite la page des maisons
+    S->>DB: Requête (SELECT * FROM maison)
+    DB-->>S: Retourne la liste des maisons
+    S-->>C: Affiche la liste des maisons
+    
+    C->>S: Clique sur "Réserver"
+    alt Utilisateur non connecté
+        S-->>C: Redirige vers /login
+        C->>S: Saisit identifiants
+        S->>DB: Vérifie identifiants
+        DB-->>S: Utilisateur valide
+        S-->>C: Redirige vers le formulaire de réservation
+    end
+    
+    C->>S: Soumet le formulaire (Dates, etc.)
+    S->>S: Validation des données (Assert)
+    
+    alt Données valides
+        S->>DB: Enregistre la réservation (INSERT)
+        DB-->>S: Confirmation d'enregistrement
+        S->>S: Génère le PDF de la facture
+        S-->>C: Affiche le message de succès et propose le téléchargement
+    else Données invalides
+        S-->>C: Réaffiche le formulaire avec les erreurs
+    end
